@@ -117,7 +117,7 @@
                     <a class="text-decoration-none text-dark">{{ $data->comment }}</a>
                 </p>
                 @if($data->image != null)
-                <img src="{{ url('storage/images/' . $data->image) }}" alt="" class="ml-3" style="width: 150px; height: 150px;">
+                <img src="{{ url('storage/comment/' . $data->image) }}" alt="" class="ml-3" style="width: 150px; height: 150px;">
                 @endif
             </div>
         </div>

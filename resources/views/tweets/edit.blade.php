@@ -39,8 +39,8 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(response) {
-                    location.reload();
+                success: function() {
+                    window.location = document.referrer
                 }
             })
         }

@@ -28,18 +28,16 @@ class LoginController extends Controller
 
         // Pengecekan dimana jika data dari client sesuai dengan database
         if(!$token = Auth::attempt($validatedData)) {
-            return redirect()->back()->with(['error' => 'Login failed!'], 422);
+            return response()->json(['error' => 'Login failed!'], 422);
         }
 
-        return redirect('/home');
+        return response()->json(['success' => 'Login successfully'], 200);
     }
 
     // Function untuk aksi logout
     public function logout() {
-        // Auth::logout();
-
         auth()->logout();
 
-        return redirect('/auth');
+        return redirect()->route('auth.login');
     }
 }

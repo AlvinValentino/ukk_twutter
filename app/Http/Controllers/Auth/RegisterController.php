@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {   // Untuk middleware auth agar user yang blm login tidak mengakses
@@ -29,7 +28,8 @@ class RegisterController extends Controller
 
         // Keadaan dimana jika email yang sama pernah digunakan
         if(User::where('email', $request->email)->exists()) {
-            return redirect()->back()->with(['error' => 'Email already taken!'], 422);
+            // return redirect()->back()->with(['error' => 'Email already taken!'], 422);
+            return response()->json(['error' => 'Email already taken'], 422);
         } else {
             // Untuk memasukkan data yang dikirimkan client ke database jika berhasil melewati pemeriksaan
             User::create([

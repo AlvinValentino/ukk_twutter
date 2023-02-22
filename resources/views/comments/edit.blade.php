@@ -39,8 +39,8 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(response) {
-                    window.location.href = '/home';
+                success: function() {
+                    window.location = document.referrer;
                 }
             })
         }

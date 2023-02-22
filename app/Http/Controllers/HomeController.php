@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Tag;
 use App\Models\Tweet;
 use Carbon\Carbon;
@@ -90,7 +91,8 @@ class HomeController extends Controller
     // Function untuk melakukan aksi penghapusan data tweet dari database
     public function deleteTweet($id) {
         Tweet::findOrFail($id)->delete();
+        Comment::where('tweet_id', $id)->delete();
 
-        return redirect()->back();
+        return redirect()->route('home');
     }
 }

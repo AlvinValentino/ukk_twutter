@@ -7,14 +7,6 @@
         <title>{{ $title }}</title>
     </head>
     <body>
-        <div class="d-flex justify-content-center mt-5">     
-            @if(session()->has('success'))
-                <div class="alert alert-success" style="width: 40vh;">{{ session('successs') }}</div>
-            @elseif(session()->has('error'))
-                <div class="alert alert-danger" style="width: 40vh;">{{ session('error') }}</div>
-            @endif
-        </div>
-
         @yield('main')
     </body>
 </html>

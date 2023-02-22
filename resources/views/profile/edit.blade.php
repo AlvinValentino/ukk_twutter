@@ -60,9 +60,6 @@
                 success: function(response) {
                     window.location.href = '/profile';
                 },
-                error: function(err) {
-                    console.log(err)
-                }
             })
         }
 

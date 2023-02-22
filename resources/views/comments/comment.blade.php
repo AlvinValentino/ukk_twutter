@@ -4,8 +4,9 @@
 @section('main')
 <div class="d-flex justify-content-center overflow-y-scroll">
     <div class="d-flex flex-column">
+
         <!-- Pengecekan jika image tidak ada dalam database maka padding bottomnya akan berubah -->
-            <div class="d-flex mt-4 border-bottom" style="height: 15%; padding-bottom: 70px;">
+        <div class="d-flex mt-4 border-bottom" style="height: 15%; padding-bottom: 30vh;">
 
         <!-- Pengecekan jika avatar dari user tidak ada dalam database maka akan menggunakan initial avatar -->
         @if($dataTweet->user->avatar == null)
@@ -81,7 +82,7 @@
         <div>
             @foreach($dataComment as $data)
     
-            <div class="d-flex mt-4 border-bottom" style="height: 15%;">
+            <div class="d-flex mt-4 border-bottom" style="height: 15%; padding-bottom: 35vh;">
     
             <!-- Pengecekan jika avatar dari user tidak ada dalam database maka akan menggunakan initial avatar -->
             @if($data->user->avatar == null)

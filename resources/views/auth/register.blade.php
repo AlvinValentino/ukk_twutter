@@ -8,7 +8,7 @@
                 <img src="{{ url('assets/twitter.png') }}" style="width: 60px; height: 50px;" class="" alt="">
                 <p class="h4 mt-4 ml-2">Create your account</p>
             </div>
-            <form class="d-flex flex-column align-items-center" style="margin-top: 90px;" method="POST" action="{{ route('auth.registerAction') }}">
+            <form id="form-register" class="d-flex flex-column align-items-center" style="margin-top: 90px;" method="POST" action="{{ route('auth.registerAction') }}">
             @csrf
                 <div class="form-group" style="width: 40vh;">
                     <input type="email" name="email" class="form-control form-control-lg" placeholder="name@xyz.com">
@@ -25,4 +25,34 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        function submitData(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                type: 'POST',
+                url: $('#form-register').attr('action'),
+                data: new FormData(this),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    window.location.href = '/auth'
+                },
+                error: function(err) {
+                    alert(err.responseJSON.message)
+                    location.reload()
+                }
+
+            })
+        }
+
+        $('#form-register').on('submit', submitData)
+    })
+</script>
 @endsection

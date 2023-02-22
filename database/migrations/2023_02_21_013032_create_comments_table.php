@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('tweet_id');
             $table->integer('user_id');
             $table->string('tags')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

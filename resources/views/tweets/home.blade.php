@@ -108,9 +108,6 @@
                 success: function(response) {
                     location.reload();
                 },
-                error: function(err) {
-                    console.log(err)
-                }
             })
         }
 
