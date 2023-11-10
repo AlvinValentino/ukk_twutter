@@ -1,10 +1,10 @@
 @extends('layouts.layout')
-@extends('layouts.navbar')
 
 @section('main')
+@include('layouts.navbar')
 <div class="d-flex justify-content-center overflow-y-scroll">
     <div style="width: 35%;">
-        <div class="d-flex mt-4 border-bottom" style="height: 15%; padding-bottom: 200px;">
+        <div class="d-flex mt-4 border-bottom pb-3">
         @if(Auth::user()->avatar == null)
             <span style="
             width:50px;
@@ -36,43 +36,35 @@
         @foreach($tweetData as $data)
 
         <!-- Pengecekan jika image tidak ada dalam database maka padding bottomnya akan berubah -->
-        <div class="d-flex mt-4 border-bottom" style="height: 15%; padding-bottom: 350px;">
+        <div class="d-flex my-4 pb-3 border-bottom">
 
         <!-- Pengecekan jika avatar dari user tidak ada dalam database maka akan menggunakan initial avatar -->
         @if($data->user->avatar == null)
-            <span style="
-            width:50px;
-            height:50px;
-            color:#fff;
-            font-weight:700;
-            font-size: 25px;
-            text-transform:600;
-            background-color:#5BC0F8;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;" 
-            class="initial mt-1">{{ substr($data->user->username, 0, 1) }}</span>
+            @include('profile.avatar')
         @else
-            <img src="{{ url('storage/avatar/' . $data->user->avatar) }}" alt="" style="width: 50px; height: 50px;">
+            <img src="{{ url('storage/avatar/' . $data->user->avatar) }}" alt="" class="rounded-circle" style="width: 80px; height: 80px;">
         @endif
             <div>
                 <div class="d-flex flex-row">
-                    <p class="ml-4 h4">{{ '@' . $data->user->username }}</p>
+                    <div class="d-flex">
+                        <p class="my-auto h5 mx-3">{{ $data->user->name ? $data->user->name : '@' . $data->user->username }}</p>
+                        <p class="mr-3 h2">.</p>
+                        <p class="my-auto">{{ '@' . $data->user->username }}</p>
+                    </div>
                     @if(Auth::user()->id == $data->user->id)
                     <div class="d-flex flex-row" style="margin-left: 25vh;">
                         <form action="{{ route('editTweet', $data->id) }}" method="GET" class="mr-3">
                             @csrf
-                            <button class="btn text-white font-weight-bold" style="background-color: #1D9BF0; border-radius: 15px;">Edit Tweet</button>
+                            <button class="btn text-white" style="font-weight: 500; width: 8rem; background-color: #1D9BF0; border-radius: 15px;">Edit Tweet</button>
                         </form>
                         <form action="{{ route('deleteTweet', $data->id) }}" method="POST">
                         @csrf
-                            <button class="btn text-white font-weight-bold" style="background-color: #1D9BF0; border-radius: 15px;">Delete</button> 
+                            <button class="btn text-white" style="font-weight: 500; width: 5rem; background-color: #1D9BF0; border-radius: 15px;">Delete</button> 
                         </form>
                     </div>
                     @endif
                 </div>
-                <p class="ml-4 h6">
+                <p class="ml-3 h6">
                     <a class="text-decoration-none text-dark">{{ $data->tweet }}</a>
                 </p>
                 @if($data->image != null)
@@ -99,9 +91,6 @@
                 url: $('#form-tweet').attr('action'),
                 data: new FormData(this),
                 dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
                 cache: false,
                 contentType: false,
                 processData: false,

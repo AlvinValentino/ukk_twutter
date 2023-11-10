@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // Untuk middleware auth agar user yang blm login tidak mengakses
+    // Untuk middleware auth agar user yang login tidak mengakses
     function __construct() {
         $this->middleware('auth')->except('index', 'loginAction');
     }
@@ -27,17 +27,20 @@ class LoginController extends Controller
         ]);
 
         // Pengecekan dimana jika data dari client sesuai dengan database
-        if(!$token = Auth::attempt($validatedData)) {
-            return response()->json(['error' => 'Login failed!'], 422);
+        if(Auth::attempt($validatedData)) {
+            return response()->json(['message' => 'Login successfully', 'statusCode' => 200], 200);
         }
-
-        return response()->json(['success' => 'Login successfully'], 200);
+        
+        return response()->json(['message' => 'Login failed!', 'statusCode' => 401], 401);
     }
 
     // Function untuk aksi logout
     public function logout() {
-        auth()->logout();
-
-        return redirect()->route('auth.login');
+        if(Auth::check()) {
+            Auth::logout();
+            return response()->json(['message' => 'Anda berhasil logout!', 'statusCode' => 200], 200);
+        } else { 
+            return response()->json(['message' => 'Anda belum login!', 'statusCode' => 500], 500);
+        }
     }
 }

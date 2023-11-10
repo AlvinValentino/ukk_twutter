@@ -32,9 +32,12 @@ class HomeController extends Controller
         // Untuk memisahkan # dengan string
         $arrayData = explode('#', $request->tweet);
         $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
-        $tags = implode(',', $arrayOfTags);
+        for($i = 0; $i < count($arrayOfTags); $i++) {
+            $explodeTagSpace = explode(' ', $arrayOfTags[$i]);
+            $arrayOfTags[$i] = $explodeTagSpace[0];
+        }
 
-        $fname = null;
+        $tags = implode(',', $arrayOfTags);
 
         if ($request->hasFile('image')) {
             $storage_file = Storage::disk('images');
@@ -43,16 +46,15 @@ class HomeController extends Controller
             $storage_file->putFileAs(null, $request->file('image'), $fname, []);
         }
 
-
         Tweet::create([
             'tags' => $tags,
-            'tweet' => $request->tweet,
-            'image' => $fname,
+            'tweet' => $arrayData[0],
+            'image' => $fname ? $fname : null,
             'user_id' => Auth::user()->id,
         ]);
 
 
-        return response()->json(['success' => 'Tweet successfully uploaded!'], 200);
+        return response()->json(['message' => 'Tweet berhasil terunggah', 'statusCode' => 201], 201);
     }
 
     // Function untuk mengambil data untuk edit tweet
@@ -64,25 +66,37 @@ class HomeController extends Controller
 
     // Function untuk aksi edit data tweet
     public function updateTweet(Request $request, $id) {
-        $tweet = Tweet::find($id);
-
+        $tweet = Tweet::findOrFail($id);
         $today = Carbon::now();
 
         $validatedData = $request->validate([
             'tweet' => 'required|max:250'
         ]);
-        
-        $fname = null;
+
+        $arrayData = explode('#', $request->tweet);
+        $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
+        for($i = 0; $i < count($arrayOfTags); $i++) {
+            $explodeTagSpace = explode(' ', $arrayOfTags[$i]);
+            $arrayOfTags[$i] = $explodeTagSpace[0];
+        }
+
+        $tags = implode(',', $arrayOfTags);
         
         if ($request->hasFile('image')) {
             $storage_file = Storage::disk('images');
+
+            if($tweet->image && $storage_file->exists($tweet->image)) {
+                $storage_file->delete($tweet->image);
+            }
+
             $fname = $today->format('Ymd_Hms') . '' . Str::random(5) . '' . Str::slug(Auth::user()->username, '_', 'end') . '.' . $request->file('image')->getClientOriginalExtension();
             $storage_file->putFileAs(null, $request->file('image'), $fname, []);
         }
 
         $tweet->update([
-            'tweet' => $request->tweet,
-            'image' => $fname
+            'tweet' => $arrayData[0],
+            'tags' => $tags,
+            'image' => $request->image ? $fname : $tweet->image
         ]);
 
         return response()->json(['success' => 'Tweet successfully updated!']);

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
-@extends('layouts.navbar')
 
 @section('main')
+@include('layouts.navbar')
 <div class="d-flex justify-content-center overflow-y-scroll">
     <div class="d-flex flex-column">
 

@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
-{   // Untuk middleware auth agar user yang blm login tidak mengakses
+{   // Untuk middleware auth agar user yang login tidak mengakses
     function __construct() {
         $this->middleware('auth')->except('index', 'registerAction');
     }
@@ -28,8 +28,7 @@ class RegisterController extends Controller
 
         // Keadaan dimana jika email yang sama pernah digunakan
         if(User::where('email', $request->email)->exists()) {
-            // return redirect()->back()->with(['error' => 'Email already taken!'], 422);
-            return response()->json(['error' => 'Email already taken'], 422);
+            return response()->json(['message' => 'Email sudah digunakan user lain', 'statusCode' => 500], 500);
         } else {
             // Untuk memasukkan data yang dikirimkan client ke database jika berhasil melewati pemeriksaan
             User::create([
@@ -38,7 +37,7 @@ class RegisterController extends Controller
                 'password' => bcrypt($request->password) // Enkripsi password agar akun tidak gampang dibobol
             ]);
 
-            return redirect()->route('auth.login');
+            return response()->json(['message' => 'Akun anda berhasil terbuat!', 'statusCode' => 201], 201);
         }
     }
 }

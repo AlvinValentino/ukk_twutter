@@ -22,33 +22,39 @@ class ProfileController extends Controller
     public function indexEdit() {
         $dataUser = User::findOrFail(Auth::user()->id)->first();
 
-        return view('profile.edit', ['title' => 'Edit Profile Page'], compact('dataUser'));
+        return view('profile.edit', ['title' => 'Edit Profile Page', 'dataUser' => $dataUser]);
     }
 
     // Function untuk aksi edit data
-    public function editProfile(Request $request, User $user, $id) {
+    public function editProfile(Request $request, $id) {
         $validatedData = $request->validate([
             'username' => 'required'
         ]);
 
-        $user = User::find($id);
-        
-        $fname = null;
+        $user = User::findOrFail($id);
 
-        if($request->hasFile('avatar')) {
-            $storage_file = Storage::disk('avatar');
-
-            $fname = Str::random(5) . '' . Str::slug(Auth::user()->username) . '.' . $request->file('avatar')->getClientOriginalExtension();
-            $storage_file->putFileAs(null, $request->file('avatar'), $fname, []);
+        if(!User::where('username', $request->username)->exists() || $user->username === $request->username) {
+            if($request->hasFile('avatar')) {
+                $storage_file = Storage::disk('avatar');
+    
+                if($user->avatar && $storage_file->exists($user->avatar)) {
+                    $storage_file->delete($user->avatar);
+                }
+    
+                $fname = Str::random(5) . '' . Str::slug(Auth::user()->username) . '.' . $request->file('avatar')->getClientOriginalExtension();
+                $storage_file->putFileAs(null, $request->file('avatar'), $fname, []);
+            }
+    
+            $user->update([
+                'avatar' => $request->avatar ? $fname : $user->avatar,
+                'username' => $request->username,
+                'name' => $request->name,
+                'bio' => $request->bio
+            ]);
+    
+            return response()->json(['message' => 'Profile successfully updated!', 'statusCode' => 200], 200);
+        } else {
+            return response()->json(['message' => 'Username ini telah digunakan oleh user lain', 'statusCode' => 500], 500);
         }
-
-        $user->update([
-            'avatar' => $fname,
-            'username' => $request->username,
-            'name' => $request->name,
-            'bio' => $request->bio
-        ]);
-
-        return response()->json(['success' => 'Profile successfully updated!']);
     }
 }

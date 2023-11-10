@@ -1,7 +1,7 @@
 @extends('layouts.layout')
-@extends('layouts.navbar')
 
 @section('main')
+@include('layouts.navbar')
 <div class="d-flex justify-content-center mt-4">
     <div id="main">
         <div>
@@ -18,7 +18,7 @@
         @if(count($dataTweet) > 0)
         @foreach($dataTweet as $data)
         <!-- Pengecekan jika image tidak ada dalam database maka padding bottomnya akan berubah -->
-        <div class="d-flex mt-5 border-bottom" style="height: 15%; padding-bottom: 350px;">
+        <div class="d-flex mt-5 border-bottom py-3">
 
         <!-- Pengecekan jika avatar dari user tidak ada dalam database maka akan menggunakan initial avatar -->
         @if($data->user->avatar == null)
@@ -77,7 +77,7 @@
 
         @foreach($dataComment as $data)
             <!-- Pengecekan jika image tidak ada dalam database maka padding bottomnya akan berubah -->
-        <div class="d-flex mt-5 border-bottom" style="height: 15%; padding-bottom: 350px;">
+        <div class="d-flex mt-5 border-bottom">
 
         <!-- Pengecekan jika avatar dari user tidak ada dalam database maka akan menggunakan initial avatar -->
         @if($data->user->avatar == null)

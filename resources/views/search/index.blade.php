@@ -1,7 +1,7 @@
 @extends('layouts.layout')
-@extends('layouts.navbar')
 
 @section('main')
+@include('layouts.navbar')
 <div class="d-flex justify-content-center mt-4">
     <div>
         <form id="form-search" action="{{ route('explore.search') }}" class="d-flex" method="GET">

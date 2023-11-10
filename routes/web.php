@@ -20,12 +20,8 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 // Routing untuk path auth
-Route::group(['prefix' => 'auth'], function() {
+Route::group(['prefix' => '/'], function() {
 
     // Routing untuk login
     Route::get('/', [LoginController::class, 'index'])->name('auth.login');
